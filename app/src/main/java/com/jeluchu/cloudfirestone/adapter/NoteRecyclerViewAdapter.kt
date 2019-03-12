@@ -22,7 +22,7 @@ class NoteRecyclerViewAdapter(
         private val firestoreDB: FirebaseFirestore)
     : RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_note, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
 
         return ViewHolder(view)    }
 
