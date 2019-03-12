@@ -1,54 +1,111 @@
 package com.jeluchu.cloudfirestone
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.Toast
+import android.content.Intent
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.firestore.DocumentReference
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.jeluchu.cloudfirestone.adapter.NoteRecyclerViewAdapter
+import com.jeluchu.cloudfirestone.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var db: DocumentReference
+    private val tag = "MainActivity"
+
+    private var mAdapter: NoteRecyclerViewAdapter? = null
+
+    private var firestoreDB: FirebaseFirestore? = null
+    private var firestoreListener: ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = FirebaseFirestore.getInstance().document("users/data")
+        initToolbar()
 
-        val store = findViewById<View>(R.id.button) as Button
+        firestoreDB = FirebaseFirestore.getInstance()
 
-        store.setOnClickListener {
-            store ()
-        }
+        loadNotesList()
 
+        firestoreListener = firestoreDB!!.collection("notes")
+                .addSnapshotListener(EventListener { documentSnapshots, e ->
+                    if (e != null) {
+                        Log.e(tag, "Listen failed!", e)
+                        return@EventListener
+                    }
+
+                    val notesList = mutableListOf<Note>()
+
+                    if (documentSnapshots != null) {
+                        for (doc in documentSnapshots) {
+                            val note = doc.toObject(Note::class.java)
+                            note.id = doc.id
+                            notesList.add(note)
+                        }
+                    }
+
+                    mAdapter = NoteRecyclerViewAdapter(notesList, applicationContext, firestoreDB!!)
+                    rvNoteList.adapter = mAdapter
+                })
     }
 
-    private fun store () {
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+    }
 
-        val names = name.text.toString().trim()
-        val users = user.text.toString().trim()
-        val years = years.text.toString().trim()
 
-        if (!names.isEmpty() && !users.isEmpty() && !years.isEmpty()) {
-            try {
-                val items = HashMap<String, Any>()
-                items["users"] = users
-                items["years"] = years
-                db.collection(names).document("profile").set(items).addOnSuccessListener {
-                    Toast.makeText(this, "Subido con éxito", Toast.LENGTH_LONG).show()
-                }.addOnFailureListener {
-                        exception: java.lang.Exception -> Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
+    override fun onDestroy() {
+        super.onDestroy()
+
+        firestoreListener!!.remove()
+    }
+
+    private fun loadNotesList() {
+        firestoreDB!!.collection("notes")
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val notesList = mutableListOf<Note>()
+
+                        for (doc in task.result!!) {
+                            val note = doc.toObject<Note>(Note::class.java)
+                            note.id = doc.id
+                            notesList.add(note)
+                        }
+
+                        mAdapter = NoteRecyclerViewAdapter(notesList, applicationContext, firestoreDB!!)
+                        val mLayoutManager = LinearLayoutManager(applicationContext)
+                        rvNoteList.layoutManager = mLayoutManager
+                        rvNoteList.itemAnimator = DefaultItemAnimator()
+                        rvNoteList.adapter = mAdapter
+                    } else {
+                        Log.d(tag, "Error getting documents: ", task.exception)
+                    }
                 }
-            }catch (e:Exception) {
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null) {
+            if (item.itemId == R.id.addNote) {
+                val intent = Intent(this, NoteActivity::class.java)
+                startActivity(intent)
             }
-        }else {
-            Toast.makeText(this, "Rellena los campos", Toast.LENGTH_LONG).show()
         }
 
+        return super.onOptionsItemSelected(item)
     }
 }

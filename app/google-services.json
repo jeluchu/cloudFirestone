@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "402774520358",
+    "firebase_url": "https://animelist-26323.firebaseio.com",
+    "project_id": "animelist-26323",
+    "storage_bucket": "animelist-26323.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402774520358:android:67947a346e8565c9",
+        "android_client_info": {
+          "package_name": "com.jeluchu.cloudfirestone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "402774520358-1ha0i44dc2ldd6eito0tf5sdj2nsfph0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs2Z1UK0x7KvWxdVfnUy3xrALh7WoFNgQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

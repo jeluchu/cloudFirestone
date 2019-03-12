@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    <EditText
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorGrey"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextColor="#008577"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNoteList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="Nombre"
-            android:ems="10"
-            android:id="@+id/name"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="Usuario"
-            android:ems="10"
-            android:id="@+id/user"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Años"
-            android:ems="10"
-            android:id="@+id/years"/>
-    <Button
-            android:hint="Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/button"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:scrollbars="vertical" />
+
 </LinearLayout>

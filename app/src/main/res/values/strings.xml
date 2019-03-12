@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CloudFirestone</string>
+    <string name="titulo">Introduce el título</string>
+    <string name="descripcion">Introduce una breve descripción</string>
+    <string name="anadir">Añadir</string>
+    <string name="title">Título</string>
+    <string name="description">Descripción</string>
 </resources>
